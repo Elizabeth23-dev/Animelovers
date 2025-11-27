@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Game Matematika Kelas 7</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #111827;
+    --muted: #6b7280;
+    --text: #e5e7eb;
+    --accent: #22c55e;
+    --accent-2: #60a5fa;
+    --danger: #ef4444;
+    --warn: #f59e0b;
+    --shadow: 0 10px 25px rgba(0,0,0,.35);
+    --radius: 18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    background: radial-gradient(1200px 800px at 20% -10%, #1f2937 0%, var(--bg) 40%) fixed;
+    color: var(--text);
+    min-height:100svh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 32px 16px;
+  }
+  .app{
+    width: 100%;
+    max-width: 920px;
+    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 20px 24px;
+    background: rgba(255,255,255,.02);
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  h1{font-size: clamp(18px, 2.6vw, 28px); margin:0;}
+  .badge{font-size:12px;color:#d1d5db;background:#111827;border:1px solid rgba(255,255,255,.06);padding:6px 10px;border-radius:999px}
+  main{padding: 24px}
+  .grid{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
+  @media (max-width:720px){ .grid{grid-template-columns:1fr} }
+  label{display:block; font-weight:600; margin-bottom:6px}
+  input[type="text"], select, input[type="number"]{
+    width:100%; padding:12px 14px; border-radius:12px;
+    border:1px solid rgba(255,255,255,.1);
+    background:#0b1220; color:var(--text);
+    outline:none;
+  }
+  input::placeholder{color:#9ca3af}
+  .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:12px}
+  button{
+    padding:12px 16px; border:none; border-radius:12px; font-weight:700; cursor:pointer;
+    background: var(--accent-2); color:#0b1220;
+  }
+  button.secondary{background:#1f2937; color:#d1d5db; border:1px solid rgba(255,255,255,.08)}
+  button.ghost{background:transparent; color:#cbd5e1; border:1px dashed rgba(255,255,255,.2)}
+  .card{
+    background: #0b1220;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:16px; padding:18px;
+  }
+  .muted{color:var(--muted)}
+  .question{
+    font-size: clamp(18px,2.4vw,24px);
+    font-weight:800;
+    letter-spacing:.2px;
+  }
+  .pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:#0b1220;color:#cbd5e1;font-size:12px}
+  .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+  .score{font-weight:800}
+  .good{color:var(--accent)}
+  .bad{color:var(--danger)}
+  .warn{color:var(--warn)}
+  .divider{height:1px;background:rgba(255,255,255,.08); margin:14px 0}
+  .big{font-size: clamp(22px,3.2vw,34px); font-weight:900}
+  .center{text-align:center}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div>
+      <h1>Game Matematika Kelas 7</h1>
+      <div style="font-size:13px;color:#9ca3af;margin-top:4px;">
+        <b>Kelompok:</b> 2 &nbsp; | &nbsp; <b>NPM:</b> 014 056 059 102 &nbsp; | &nbsp; <b>Kelas:</b> 02
+      </div>
+    </div>
+    <span class="badge">Mode · Offline</span>
+  </header>
+  <main>
+    <section id="screen-setup">
+      <div class="grid">
+        <div class="card">
+          <label for="nama">Nama Pemain</label>
+          <input id="nama" type="text" placeholder="Misal: Waffiq" />
+        </div>
+        <div class="card">
+          <label for="mode">Mode</label>
+          <select id="mode">
+            <option>Aritmetika</option>
+            <option>Bilangan Bulat</option>
+            <option>FPB/KPK</option>
+            <option>Persentase</option>
+            <option>Persamaan</option>
+            <option>Aljabar Dasar</option>
+</select>
+        </div>
+        <div class="card">
+          <label for="tingkat">Tingkat Kesulitan</label>
+          <select id="tingkat">
+            <option>Mudah</option>
+            <option>Sedang</option>
+            <option>Sulit</option>
+          </select>
+        </div>
+        <div class="card">
+          <label for="jumlah">Jumlah Soal (5–30)</label>
+          <input id="jumlah" type="number" min="5" max="30" step="1" value="10" />
+        </div>
+      </div>
+      <div class="actions" style="margin-top:20px">
+        <button id="btnStart">Mulai</button>
+        <button class="secondary" id="btnQuick">Mulai Cepat (10 soal)</button>
+        <button class="ghost" id="btnHow">Cara bermain</button>
+      </div>
+      <p class="muted" style="margin-top:6px">
+        Skor dipengaruhi kecepatan menjawab: makin cepat, makin tinggi.
+      </p>
+    </section>
+
+    <section id="screen-play" style="display:none">
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <div class="row">
+          <span class="pill" id="pillMode"></span>
+          <span class="pill" id="pillLevel"></span>
+          <span class="pill" id="pillIndex"></span>
+        </div>
+        <div class="row">
+          <span class="pill">⏱️ <span id="timer">0.0</span>s</span>
+          <span class="pill">⭐ <span id="pillScore">0</span></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="question" id="questionText">Soal tampil di sini…</div>
+        <div class="divider"></div>
+        <label for="jawab">Jawaban</label>
+        <input id="jawab" type="text" placeholder="Ketik jawabanmu (misal: 3x, a/b) lalu Enter" />
+        <div class="actions">
+          <button id="btnSubmit">Kirim Jawaban (Enter)</button>
+          <button class="secondary" id="btnSkip">Lewati</button>
+          <button class="ghost" id="btnStop">Berhenti</button>
+        </div>
+        <p id="feedback" class="muted" style="min-height:1.2em;margin:8px 2px 0"></p>
+      </div>
+    </section>
+
+    <section id="screen-result" style="display:none">
+      <div class="card center">
+        <div class="big" id="resultTitle">Rekap</div>
+        <p style="font-size:13px;color:#9ca3af;">
+        </p>
+        <p class="muted" id="resultSub"></p>
+        <div class="divider"></div>
+        <div class="grid">
+          <div class="card">
+            <div class="muted">Benar</div>
+            <div class="big good" id="statBenar">0</div>
+          </div>
+          <div class="card">
+            <div class="muted">Akurasi</div>
+            <div class="big" id="statAkurasi">0%</div>
+          </div>
+          <div class="card">
+            <div class="muted">Rata Waktu/Soal</div>
+            <div class="big" id="statRata">0.0s</div>
+          </div>
+          <div class="card">
+            <div class="muted">Total Skor</div>
+            <div class="big" id="statSkor">0</div>
+          </div>
+        </div>
+        <p id="saran" style="margin-top:14px"></p>
+        <div class="actions" style="justify-content:center">
+          <button id="btnReplay">Main Lagi</button>
+          <button class="secondary" id="btnDownload">Unduh Hasil (.txt)</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const $ = (sel) => document.querySelector(sel);
+const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+function randint(lo, hi) { return Math.floor(Math.random()*(hi-lo+1))+lo; }
+function choice(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){const t=a%b; a=b; b=t;} return a||1; }
+function lcm(a,b){ return Math.abs(a*b)/gcd(a,b); }
+function rentang(tingkat){
+  if(tingkat==="Mudah") return [1,20];
+  if(tingkat==="Sedang") return [5,50];
+  return [10,100];
+}
+function skorDariWaktu(detik, tingkat){
+  const base = {Mudah:8, Sedang:12, Sulit:16}[tingkat] ?? 10;
+  let bonus = 1;
+  if (detik <= 3) bonus = 10;
+  else if (detik <= 6) bonus = 6;
+  else if (detik <= 10) bonus = 3;
+  return Math.floor(base * bonus);
+}
+
+function genAritmetika(tingkat){
+  let [lo,hi] = rentang(tingkat);
+  let a = randint(lo,hi), b = randint(lo,hi);
+  const ops = ["+","-","×","÷"];
+  let op = choice(ops);
+  if(op==="+") return [`${a} + ${b} = ?`, a+b];
+  if(op==="-") return [`${a} - ${b} = ?`, a-b];
+  if(op==="×") return [`${a} × ${b} = ?`, a*b];
+  b = randint(lo,hi);
+  let hasil = randint(lo, Math.max(lo, Math.floor(hi/2)));
+  a = b * Math.max(1, hasil);
+  return [`${a} ÷ ${b} = ?`, Math.floor(a/b)];
+}
+
+function genBilanganBulat(tingkat){
+  let [lo,hi] = rentang(tingkat);
+  const s = ()=> (Math.random()<.5?-1:1);
+  let a = s()*randint(lo,hi), b = s()*randint(lo,hi);
+  let op = choice(["+","-","×"]);
+  if(op==="+") return [`${a} + ${b} = ?`, a+b];
+  if(op==="-") return [`${a} - ${b} = ?`, a-b];
+  return [`${a} × ${b} = ?`, a*b];
+}
+
+function genFpbKpk(tingkat){
+  let [lo,hi] = rentang(tingkat);
+  let a = randint(lo,hi), b = randint(lo,hi);
+  let jenis = choice(["FPB","KPK"]);
+  let jawab = jenis==="FPB" ? gcd(a,b) : lcm(a,b);
+  return [`${jenis} dari ${a} dan ${b} = ?`, Math.round(jawab)];
+}
+
+function genPersentase(tingkat){
+  let [lo,hi] = rentang(tingkat);
+  let p = choice([5,10,12,15,20,25,30,40,50]);
+  let x = randint(lo*5, hi*5);
+  let tipe = choice(["p_dari_x", "y_adalah_p_dari_x"]);
+  if(tipe==="p_dari_x"){
+    let hasil = Math.round(p * x / 100);
+    return [`Hitung ${p}% dari ${x} (bulatkan ke terdekat) = ?`, hasil];
+  } else {
+    let y = Math.round(p * x / 100);
+    return [`${y} adalah berapa persen dari ${x}? (bulatkan ke terdekat) = ?`, p];
+  }
+}
+
+function genPersamaan(tingkat){
+  let [lo,hi] = rentang(tingkat);
+  let a = randint(2,12);
+  let b = randint(lo,hi);
+  let x = randint(lo,hi);
+  let c = a*x + b;
+  let bentuk = choice(["ax+b=c","x/a+b=c"]);
+  if(bentuk==="ax+b=c"){
+    return [`Jika ${a}x + ${b} = ${c}, maka nilai x = ?`, Math.floor((c-b)/a)];
+  } else {
+    return [`Jika x/${a} + ${b} = ${c}, maka nilai x = ?`, a*(c-b)];
+  }
+}
+
+
+function genAljabarDasar(tingkat){
+  const variabel = choice(["x","y","a","b"]);
+  let [lo,hi] = rentang(tingkat);
+  const a = randint(1,10);
+  const b = randint(1,10);
+  const c = randint(1,10);
+  const op = choice(["+","-","×"]);
+
+  if(op==="+"){
+    return [`Hitung: ${a}${variabel} + ${b}${variabel} = ?`, `${a+b}${variabel}`];
+  }
+  if(op==="-"){
+    return [`Hitung: ${a}${variabel} - ${b}${variabel} = ?`, `${a-b}${variabel}`];
+  }
+  return [`Hitung: ${a}${variabel} × ${c} = ?`, `${a*c}${variabel}`];
+}
+
+const GENERATOR = {
+  "Aritmetika": genAritmetika,
+  "Bilangan Bulat": genBilanganBulat,
+  "FPB/KPK": genFpbKpk,
+  "Persentase": genPersentase,
+  "Persamaan": genPersamaan,
+  "Aljabar Dasar": genAljabarDasar,
+};
+
+const state = {
+  nama: "Pemain",
+  mode: "Aritmetika",
+  tingkat: "Mudah",
+  jumlah: 10,
+  i: 0,
+  benar: 0,
+  totalSkor: 0,
+  totalWaktu: 0,
+  startTs: 0,
+  soal: "",
+  jawabBenar: 0,
+  riwayat: [],
+  tickId: null,
+};
+
+function resetState(){
+  state.i=0; state.benar=0; state.totalSkor=0; state.totalWaktu=0;
+  state.riwayat = [];
+  stopTimer();
+  $("#timer").textContent="0.0";
+  $("#feedback").textContent="";
+}
+
+function startGame(){
+  state.nama = ($("#nama").value || "Pemain").trim();
+  state.mode = $("#mode").value;
+  state.tingkat = $("#tingkat").value;
+  state.jumlah = clamp(parseInt($("#jumlah").value||"10",10), 5, 30);
+  resetState();
+  $("#pillMode").textContent = `Mode: ${state.mode}`;
+  $("#pillLevel").textContent = `Tingkat: ${state.tingkat}`;
+  $("#pillIndex").textContent = `Soal 1/${state.jumlah}`;
+  $("#pillScore").textContent = "0";
+  $("#screen-setup").style.display="none";
+  $("#screen-play").style.display="";
+  nextQuestion();
+}
+
+function showSetup(){
+  $("#screen-result").style.display="none";
+  $("#screen-play").style.display="none";
+  $("#screen-setup").style.display="";
+}
+
+function stopGame(){
+  showResult();
+}
+
+function startTimer(){
+  state.startTs = performance.now();
+  stopTimer();
+  state.tickId = requestAnimationFrame(tick);
+}
+function tick(){
+  const sec = (performance.now()-state.startTs)/1000;
+  $("#timer").textContent = sec.toFixed(1);
+  state.tickId = requestAnimationFrame(tick);
+}
+function stopTimer(){
+  if(state.tickId){ cancelAnimationFrame(state.tickId); state.tickId = null; }
+}
+
+function nextQuestion(){
+  if(state.i >= state.jumlah){ showResult(); return; }
+  const gen = GENERATOR[state.mode];
+  const [soal, jawab] = gen(state.tingkat);
+  state.soal = soal;
+  state.jawabBenar = jawab;
+  state.i++;
+  $("#questionText").textContent = soal;
+  $("#pillIndex").textContent = `Soal ${state.i}/${state.jumlah}`;
+  $("#jawab").value = "";
+  $("#feedback").textContent = "";
+  $("#jawab").focus();
+  startTimer();
+}
+
+function submitAnswer(skip=false){
+  stopTimer();
+  const elapsed = (performance.now()-state.startTs)/1000;
+  let userVal = skip ? "" : $("#jawab").value.trim();
+  let benar = false;
+
+  const normAlg = (s) => {
+    s = String(s).toLowerCase().replace(/\s+/g, "");
+    s = s.replace(/^1([a-z]+)/, "$1");
+    return s;
+  };
+
+  if (state.mode === "Aljabar Dasar") {
+    benar = normAlg(userVal) === normAlg(state.jawabBenar);
+  } else {
+    const numUser = Number(userVal);
+    const numAns = Number(state.jawabBenar);
+    benar = !isNaN(numUser) && numUser === numAns;
+  }
+let point = 0;
+  if(benar){
+    state.benar++;
+    point = skorDariWaktu(elapsed, state.tingkat);
+    state.totalSkor += point;
+    $("#feedback").innerHTML = `✅ Benar! (+${point} poin) | Waktu: ${elapsed.toFixed(1)}s`;
+  } else {
+    $("#feedback").innerHTML = `❌ Salah. Jawaban benar: <b>${state.jawabBenar}</b> | Waktu: ${elapsed.toFixed(1)}s`;
+  }
+  state.totalWaktu += elapsed;
+  $("#pillScore").textContent = String(state.totalSkor);
+  state.riwayat.push({
+    no: state.i, soal: state.soal, jawab: isNaN(userVal) ? "(lewati)" : userVal,
+    benar, kunci: state.jawabBenar, waktu: elapsed.toFixed(1), poin: point
+  });
+  setTimeout(nextQuestion, 600);
+}
+
+function showResult(){
+  $("#screen-play").style.display="none";
+  $("#screen-result").style.display="";
+  const rata = state.totalWaktu / Math.max(1,state.jumlah);
+  const akurasi = 100 * (state.benar / Math.max(1,state.jumlah));
+  $("#resultTitle").textContent = `Rekap ${state.nama}`;
+  $("#resultSub").textContent = `${state.mode} • ${state.tingkat}`;
+  $("#statBenar").textContent = `${state.benar} dari ${state.jumlah}`;
+  $("#statAkurasi").textContent = `${akurasi.toFixed(1)}%`;
+  $("#statRata").textContent = `${rata.toFixed(1)}s`;
+  $("#statSkor").textContent = String(state.totalSkor);
+  let pesan = "";
+  if (akurasi >= 80 && rata <= 7) pesan = "Luar biasa! Pertahankan dan coba tingkat lebih sulit.";
+  else if (akurasi >= 60) pesan = "Bagus! Tingkatkan kecepatan dan ketelitian ya.";
+  else pesan = "Tetap semangat! Latihan membuat mahir.";
+  $("#saran").textContent = "Saran: " + pesan;
+}
+
+function downloadResult(){
+  const lines = [];
+  lines.push(`Rekap ${state.nama}`);
+  lines.push(`Mode/Tingkat : ${state.mode} / ${state.tingkat}`);
+  lines.push(`Benar        : ${state.benar} dari ${state.jumlah}`);
+  const rata = (state.totalWaktu/Math.max(1,state.jumlah)).toFixed(1);
+  const akurasi = (100*state.benar/Math.max(1,state.jumlah)).toFixed(1);
+  lines.push(`Rata Waktu   : ${rata} detik/soal`);
+  lines.push(`Total Skor   : ${state.totalSkor}`);
+  lines.push(``);
+  lines.push(`Identitas: Kelompok: 2 | NPM: 014 056 059 102 | Kelas: 02`);
+  lines.push(``);
+  lines.push(`Rincian:`);
+  for(const r of state.riwayat){
+    lines.push(`#${r.no} ${r.soal} | Jawab: ${r.jawab} | Kunci: ${r.kunci} | Waktu: ${r.waktu}s | Poin: ${r.poin} ${r.benar?'(Benar)':'(Salah)'}`);
+  }
+  const blob = new Blob([lines.join("\n")], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `rekap_${state.nama.replace(/\s+/g,'_')}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+$("#btnStart").addEventListener("click", startGame);
+$("#btnQuick").addEventListener("click", ()=>{
+  $("#jumlah").value = 10;
+  startGame();
+});
+$("#btnHow").addEventListener("click", ()=>{
+  alert("Pilih nama, mode, tingkat, dan jumlah soal. Jawab tiap soal dan tekan Enter atau tombol Kirim. Skor dipengaruhi kecepatan menjawab.");
+});
+$("#btnSubmit").addEventListener("click", ()=>submitAnswer(false));
+$("#btnSkip").addEventListener("click", ()=>submitAnswer(true));
+$("#btnStop").addEventListener("click", stopGame);
+$("#btnReplay").addEventListener("click", showSetup);
+$("#btnDownload").addEventListener("click", downloadResult);
+$("#jawab").addEventListener("keydown", (e)=>{
+  if(e.key==="Enter"){ submitAnswer(false); }
+});
+</script>
+</body>
+</html>
